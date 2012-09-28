@@ -21,4 +21,23 @@ ActiveRecord::Schema.define(:version => 20120905195452) do
     t.datetime "updated_at",      :null => false
   end
 
+  create_table "locations", :force => true do |t|
+  	t.string   "name"
+  	t.string   "latitude"
+  	t.string   "longitude"
+  end
+
+  create_table "posts", :force => true do |t|
+  	t.integer  "author_id"
+  	t.string   "author_name"
+  	t.text     "text"
+  	t.datetime "created_at"
+  	t.integer  "location_id"
+  end
+
+  create_table "following", :force => true do |t|
+  	t.integer  "follower_id" #the id of the user that is following the location
+  	t.integer  "location_id" #location id that is being followed
+  end
+
 end

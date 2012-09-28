@@ -28,7 +28,7 @@ class AppQuery
   #     * :longitude - the longitude
   # Output: None
   def get_following_locations(user_id)
-    @following_locations = []
+    @following_locations = Following.find_by_sql("SELECT * FROM following f, locations l WHERE f.follower_id = ?", user_id)
   end
 
   # Purpose: Show the information and all posts for a given location
@@ -54,8 +54,14 @@ class AppQuery
   #         * :longitude - the longitude
   # Output: None
   def get_posts_for_location(location_id)
-    @location = {}
+    @location = Locations.find(:id => location_id)
+    location_hash = @location.to_hash
     @posts = []
+    Posts.find_by_sql("SELECT * FROM posts p WHERE p.location_id = ?", location_id).each do |post|
+      @posts << {:author_id => post.author_id, :author => post.author, :text => post.text, :created_at => post.created_at, :location => location_hash}
+    end
+    @posts = @posts.sort_by{|p| p.created_at}.reverse
+
   end
 
   # Purpose: Show the current user's stream of posts from all the locations the user follows
